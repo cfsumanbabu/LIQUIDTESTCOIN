@@ -7,6 +7,8 @@
 <li>symbol <strong>LQCoin2</strong></li>
 <li>name LQCoin2&nbsp;<code>Token</code></li>
 <li>decimals&nbsp;<code>18</code></li>
+<li>Contract Address &nbsp;<code> <b>0xA7a2aaC7975b290a3510A1B1fE15e324A558420E </b></code></li>
+  <li>URL <code>https://ropsten.etherscan.io/address/0xa7a2aac7975b290a3510a1b1fe15e324a558420e</code></li>
 </ul>
 </li>
 <li>
