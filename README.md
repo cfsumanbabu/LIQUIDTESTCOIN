@@ -4,11 +4,11 @@
 <li>
 <p>Token Identifier</p>
 <ul>
-<li>symbol <strong>LQCoin2</strong></li>
-<li>name LQCoin2&nbsp;<code>Token</code></li>
+<li>symbol <strong>LQCoin3</strong></li>
+<li>name LQCoin3&nbsp;<code>Token</code></li>
 <li>decimals&nbsp;<code>18</code></li>
-<li>Contract Address &nbsp;<code> <b>0xA7a2aaC7975b290a3510A1B1fE15e324A558420E </b></code></li>
-  <li>URL <code>https://ropsten.etherscan.io/address/0xa7a2aac7975b290a3510a1b1fe15e324a558420e</code></li>
+<li>Contract Address &nbsp;<code> <b>0x81710Ec0d28335f635d0547E7bAd777D0116488C</b></code></li>
+  <li>URL <code>https://ropsten.etherscan.io/token/0x81710ec0d28335f635d0547e7bad777d0116488c</code></li>
 </ul>
 </li>
 <li>
