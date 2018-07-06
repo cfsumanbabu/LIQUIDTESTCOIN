@@ -89,7 +89,7 @@ contract AbstractERC20 {
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 }
 
-contract LQCoin1 is Ownable, AbstractERC20 {
+contract LQCoin3 is Ownable, AbstractERC20 {
     
     using SafeMath for uint256;
 
@@ -98,38 +98,31 @@ contract LQCoin1 is Ownable, AbstractERC20 {
     uint8 public decimals;
     
   
-    uint public  TOKENS_SOFT_CAP ;
+uint public  TOKENS_SOFT_CAP ;
     uint public  TOKENS_HARD_CAP ;
     uint public  TOKENS_TOTAL ;
     uint public tokensPerKEther ;
-      uint8 public  DECIMALS ;
+     uint public tokensPerICOEther ;
+    uint8 public  DECIMALS ;
     
-    uint public  START_DATE ;
-    uint public  END_DATE;
-    uint public CONTRIBUTIONS_MIN = 0.0015541786683797 ether;
+uint public  PreSale_Start_Date ;
+    uint public  PreSale_End_Date ;
+        
+uint public  ICO_Start_Date ;
+    uint public  ICO_End_Date ;
+uint public CONTRIBUTIONS_MIN = 0.0015541786683797 ether ;
     uint public CONTRIBUTIONS_MAX = 10 ether;
-    //address of distributor
-    address public distributor;
-    // The time after which Trad tokens become transferable.
-    // Current value is July 30, 2018 23:59:59 Eastern Time.
-    uint256 becomesTransferable = 1533009599;
 
-    mapping (address => uint256) internal balances;
-    mapping (address => mapping (address => uint256)) internal allowed;
-    // balances allowed to transfer during locking
-    mapping (address => uint256) internal balancesAllowedToTransfer;
-    //mapping to show person is investor or team/project, true=>investor, false=>team/project
-    mapping (address => bool) public isInvestor;
+mapping (address => uint256) internal balances;
+     /// The transfer allowances
+mapping (address => mapping (address => uint256)) internal allowed;
 
-    event DistributorTransferred(address indexed _from, address indexed _to);
-    event Allocated(address _owner, address _investor, uint256 _tokenAmount);
-
+mapping(address => bool) whitelist;
     constructor() public {
-       // require (_distributor != address(0x0));
-        name = "LQCoin2";
-        symbol = "LQCoin2";
+name = "LQCoin3";
+        symbol = "LQCoin3";
         decimals = 18 ;
-        totalSupply = 300e6 * 10**18;    // 300 million tokens
+        totalSupply = 39e6 * 10**18;    // 300 million tokens
          DECIMALS = 18;
       //  Price in USD  482.57 
 //ETH per token = .75 / 482.57  = 0.0015541786683797
@@ -138,51 +131,45 @@ contract LQCoin1 is Ownable, AbstractERC20 {
 //tokensPerKEther = 643426
 
         tokensPerKEther = 643426;
+        
+         //  Price in USD  482.57 
+//ETH per token = 1.40 / 482.57  =0.0029011335143088
+//This is the same as 1 / 0.0029011335143088 = 344.6928571428577 LIQUID per ETH
+//tokensPerICOEther = 344.6928571428577
+//tokensPerICOEther = 344692
+
+        tokensPerICOEther = 344692;
          // ------------------------------------------------------------------------
     // Tranche 1 soft cap and hard cap, and total tokens
     // ------------------------------------------------------------------------
-    TOKENS_SOFT_CAP = 13e6 * 10**18;
-    TOKENS_HARD_CAP = 100e6 * 10**18;
+    TOKENS_SOFT_CAP = 7e6 * 10**18;
+    TOKENS_HARD_CAP = 25e6 * 10**18;
    
 
     // ------------------------------------------------------------------------
-    // Tranche 1 crowdsale start date and end date
+    // Precrowdsale start date and end date
    
     // Start - 07/04/2018 @ 1:59pm (UTC)
     // End - 05/14/2018 @ 12:00am (UTC)
     // ------------------------------------------------------------------------
- START_DATE = 1530712699;
- END_DATE = 1526256000;
+ PreSale_Start_Date = 1530712699;
+ PreSale_End_Date = 1526256000;
+ 
+  // ------------------------------------------------------------------------
+    // ICO crowdsale start date and end date
+   
+    // Start - 07/04/2018 @ 1:59pm (UTC)
+    // End - 05/14/2018 @ 12:00am (UTC)
+    // ------------------------------------------------------------------------
+ICO_Start_Date = 1530712699;
+ICO_End_Date = 1526256000;
         owner = msg.sender;
-       // distributor = _distributor;
+  
         balances[owner] = totalSupply;
         emit Transfer(0x0, owner, totalSupply);
     }
 
-    /// manually send tokens to investor
-  /*  function allocateTokensToInvestors(address _to, uint256 _value) public onlyOwner returns (bool success) {
-        require(_to != address(0x0));
-        require(_value > 0);
-        uint256 unlockValue = (_value.mul(30)).div(100);
-        // SafeMath.sub will throw if there is not enough balance.
-        balances[distributor] = balances[distributor].sub(_value);
-        balances[_to] = balances[_to].add(_value);
-        balancesAllowedToTransfer[_to] = unlockValue;
-        isInvestor[_to] = true;
-        emit Allocated(msg.sender, _to, _value);
-        return true;
-    }
 
-    /// manually send tokens to investor
-    function allocateTokensToTeamAndProjects(address _to, uint256 _value) public onlyOwner returns (bool success) {
-        require(_to != address(0x0));
-        require(_value > 0);
-        // SafeMath.sub will throw if there is not enough balance.
-        balances[distributor] = balances[distributor].sub(_value);
-        balances[_to] = balances[_to].add(_value);
-        emit Allocated(msg.sender, _to, _value);
-        return true;
-    }*/
 
     /**
     * @dev Check balance of given account address
@@ -202,20 +189,6 @@ contract LQCoin1 is Ownable, AbstractERC20 {
     function transfer(address to, uint256 value) public returns (bool) {
         require(to != address(0x0));
         require(value <= balances[msg.sender]);
-        uint256 valueAllowedToTransfer;
-      /*  if(isInvestor[msg.sender]){
-            if (now >= becomesTransferable){
-               
-            }else{
-                valueAllowedToTransfer = balancesAllowedToTransfer[msg.sender];
-                assert(value <= valueAllowedToTransfer);
-                balancesAllowedToTransfer[msg.sender] = balancesAllowedToTransfer[msg.sender].sub(value);
-            }
-        } */
-        
-        
-         valueAllowedToTransfer = balances[msg.sender];
-                assert(value <= valueAllowedToTransfer);
         balances[msg.sender] = balances[msg.sender].sub(value);
         balances[to] = balances[to].add(value);
         emit Transfer(msg.sender, to, value);
@@ -232,27 +205,19 @@ contract LQCoin1 is Ownable, AbstractERC20 {
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         require(to != address(0x0));
         require(value <= balances[from]);
-        require(value <= allowed[from][msg.sender]);
-        uint256 valueAllowedToTransfer;
-       /* if(isInvestor[from]){
-            if (now >= becomesTransferable){
-                
-            }else{
-                valueAllowedToTransfer = balancesAllowedToTransfer[from];
-                assert(value <= valueAllowedToTransfer);
-                balancesAllowedToTransfer[from] = balancesAllowedToTransfer[from].sub(value);
-            }
-        } */
-        valueAllowedToTransfer = balances[from];
-        assert(value <= valueAllowedToTransfer);
         balances[from] = balances[from].sub(value);
         balances[to] = balances[to].add(value);
-        allowed[from][msg.sender] = allowed[from][msg.sender].sub(value);
+     
         emit Transfer(from, to, value);
         return true;
     }
     
+function approve(address addr) public {
+    // owner approves buyers by address when they pass the whitelisting procedure
+    require(msg.sender == owner);
 
+    whitelist[addr] = true;
+}
 /* Fallback */
   
  
@@ -262,9 +227,29 @@ contract LQCoin1 is Ownable, AbstractERC20 {
     uint ts ;
     ts= now;
     uint tokens = 0;
-    
+    // only approved buyers can call this function
+    require(whitelist[msg.sender]);
      // No contributions before the start of the crowdsale
-      //  require(now >= START_DATE);
+      require(now >= PreSale_Start_Date);
+      
+      uint Bonustokens ;
+     Bonustokens = GetBouns(msg.value);
+      
+      if (now > PreSale_Start_Date && now < PreSale_End_Date){
+            
+              tokens = msg.value * tokensPerKEther / 10**uint(18 - decimals + 3);
+              
+             
+        }
+        
+        if(now > ICO_Start_Date && now < ICO_End_Date){
+            
+              tokens = msg.value * tokensPerICOEther / 10**uint(18 - decimals + 3);
+              
+            
+        }
+        
+        
         // No contributions after the end of the crowdsale
        // require(now <= END_DATE);
 
@@ -273,26 +258,44 @@ contract LQCoin1 is Ownable, AbstractERC20 {
         // No contributions above a maximum (if maximum is set to non-0)
        // require(CONTRIBUTIONS_MAX == 0 || msg.value < CONTRIBUTIONS_MAX);
     
-      tokens = msg.value * tokensPerKEther / 10**uint(18 - decimals + 3);
+ 
 
         // Check if the hard cap will be exceeded
       //  if (totalSupply + tokens > TOKENS_HARD_CAP) revert();
         
         // Add tokens purchased to account's balance and total supply
         
-        totalSupply = totalSupply.add(tokens);
+        totalSupply = totalSupply.add(tokens+Bonustokens);
         
      // register tokens
-    balances[msg.sender]    = balances[msg.sender].add(tokens);
+    balances[msg.sender]    = balances[msg.sender].add(tokens+Bonustokens);
     // log token issuance
-    emit Transfer(0x0, msg.sender, tokens);
+    emit Transfer(0x0, msg.sender, tokens+Bonustokens);
    
 
   }
-
-    //function to check available balance to transfer tokens during locking perios for investors
-    function availableBalanceInLockingPeriodForInvestor(address owner) public view returns(uint256){
-        return balancesAllowedToTransfer[owner];
+ function GetBouns(uint256 amount) internal pure returns (uint) {
+     uint Bonustokens=0;
+      //Bonus Available 50,000 5%; 
+              if(amount == 5 ether){
+                  
+                  //  if(msg.value == 106.29703643862409 ether){
+                   Bonustokens = Bonustokens.mul(100 + 5) / 100;
+              }
+             //Bonus Available  100,000 10%;
+              if(amount== 212.59407287724818 ether){
+                  
+                  
+                   Bonustokens = Bonustokens.mul(100 + 10) / 100;
+              }
+               //Bonus Available  200,000 15%
+              if(amount == 425.18814575449636 ether){
+                  
+                  
+                   Bonustokens = Bonustokens.mul(100 + 15) / 100;
+              }
+     
+        return Bonustokens;
     }
 
     /**
