@@ -14,16 +14,22 @@
 <li>
 <p>Pre-Crowdsale Dates</p>
 <ul>
-<li>START_DATE = 07/04/2018 @ 1:59pm (UTC)</li>
-<li>END_DATE = 07/06/2018 @ 12:00am (UTC)<br /><br /></li>
-</ul>
-</li>
-<li>
-<p>Total of 300,000,000 LQCoin2 tokens</p>
-<br />
-<ul>
-<li>Soft cap of 13,000,000 <strong>LQCoin2</strong></li>
-<li>Hard cap of 100,000,000&nbsp;<strong>LQCoin2</strong></li>
+<li>Token LIQUID  <br />
+<li>PreSale Price 1 LIQUID = 0.70 USD 60% discount </li>
+<li>PreSale Dates Start 7/26/18 End 8/15/18</li>
+<li>ICO Price 1 LIQUID = 1.40 USD</li>
+<li>ICO Dates Start 9/26/18 End 10/15/18</li>
+<li>Bonus Available 50,000 5%; 100,000 10%; 200,000 15%</li>
+<li>Bounty Available YES</li>
+<li>MVP/Prototype Available YES</li>
+<li>KYC/Whitelist YES</li>
+<li>Country Singapore</li>
+<li>Restricted USA, China. </li>
+<li>Platform Ethereum</li>
+<li>Accepting ETH</li>
+<li>Soft cap 7,000,000 LIQUID</li>
+<li>Hard cap 25,000,000 LIQUID</li>
+<li>Total tokens 39,000,000</li>
 </ul>
 </li>
 <li>
